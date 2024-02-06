@@ -1,0 +1,48 @@
+version: '2'
+
+services:
+  spark-master:
+    image: spark:1
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - '8090:8080'
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+
+  spark-worker:
+    image: spark:1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=4G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    hostname: cassandra
+    ports:
+      - 9042:9042
+    environment:
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
+    volumes:
+      - ./:/home
+      - cassandra-data:/var/lib/cassandra
+
+
+
+

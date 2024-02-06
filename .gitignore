@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+logs/
+kafka_config.ini
+checkpoint/
